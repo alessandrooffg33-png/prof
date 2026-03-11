@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portfólio Profissional - Alessandro Campelo">
+    <title>Alessandro Campelo | Portfólio</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        /* --- ESTILOS UNIFICADOS (Baseado no seu style.css) --- */
+        :root {
+            --primary: #ff4500;         /* Laranja avermelhado profissional */
+            --primary-hover: #e53935;
+            --bg: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --text: #f8fafc;
+        }
+
+        * { box-sizing: border-box; -webkit-font-smoothing: antialiased; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Efeito de Gradiente no Fundo */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            padding: 60px 20px;
+        }
+
+        /* Cabeçalho */
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 50px;
+            padding-bottom: 80px;
+            flex-wrap: wrap;
+            text-align: center;
+        }
+
+        .profile-img {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary);
+            padding: 5px;
+            box-shadow: 0 0 30px rgba(255, 69, 0, 0.3);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: #1e293b;
+        }
+
+        .profile-img:hover { transform: rotate(5deg) scale(1.1); }
+
+        header h1 {
+            font-size: 3.5rem;
+            margin: 0;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, #fff 30%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .bio { color: #94a3b8; font-size: 1.4rem; font-weight: 300; }
+
+        /* Habilidades */
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 80px;
+        }
+
+        .skill-tag {
+            background: var(--card-bg);
+            padding: 8px 20px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+
+        .skill-tag:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        /* Grid de Projetos */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 40px;
+        }
+
+        .project-card {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            transition: 0.4s;
+            position: relative;
+            overflow: hidden;
+            text-align: left;
+        }
+
+        .project-card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 4px; height: 100%;
+            background: var(--primary);
+            opacity: 0;
+            transition: 0.3s;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(255, 69, 0, 0.4);
+            background: rgba(30, 41, 59, 0.9);
+        }
+
+        .project-card:hover::before { opacity: 1; }
+
+        .project-icon { font-size: 2rem; margin-bottom: 15px; }
+
+        .badge-dev {
+            position: absolute; top: 15px; right: 15px;
+            background: #f1c40f; color: #000; font-size: 0.7rem;
+            padding: 3px 8px; border-radius: 4px; font-weight: bold;
+        }
+
+        /* Botões */
+        .btn-ver {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 25px;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-ver:hover {
+            background: var(--primary-hover);
+            box-shadow: 0 5px 15px rgba(255, 69, 0, 0.4);
+            transform: scale(1.05);
+        }
+
+        footer {
+            text-align: center;
+            padding: 100px 0 40px;
+            opacity: 0.5;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            header h1 { font-size: 2.5rem; }
+            .profile-img { width: 150px; height: 150px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <img src="ale.jpg" alt="Alessandro Campelo" class="profile-img" onerror="this.src='https://ui-avatars.com/api/?name=Alessandro+Campelo&background=ff4500&color=ffffff&size=180'">
+            <div class="header-text">
+                <h1>Alessandro Campelo</h1>
+                <p class="bio">Analista de Redes | Full Stack Developer</p>
+            </div>
+        </header>
+
+        <section class="skills">
+            <span class="skill-tag"><i class="fas fa-network-wired"></i> Infraestrutura & Redes</span>
+            <span class="skill-tag"><i class="fab fa-html5"></i> Web Design</span>
+            <span class="skill-tag"><i class="fab fa-js"></i> JavaScript ES6+</span>
+            <span class="skill-tag"><i class="fab fa-php"></i> PHP & APIs</span>
+            <span class="skill-tag"><i class="fas fa-pen-nib"></i> Escrita Técnica</span>
+        </section>
+
+        <main class="projects-grid">
+            <article class="project-card">
+                <div class="project-icon">🔐</div>
+                <h3>Acesso Fitness</h3>
+                <p>Sistema de login com autenticação via EmailJS, validação de token e animações.</p>
+                <a href="login.html" class="btn-ver">Explorar Projeto</a>
+            </article>
+
+            <article class="project-card">
+                <div class="project-icon">🍕</div>
+                <h3>Delivery System</h3>
+                <p>Interface de alta performance com seleção de tamanhos e integração ao WhatsApp.</p>
+                <a href="DeliverySystem.html" class="btn-ver">Explorar Projeto</a>
+            </article>
+
+            <article class="project-card">
+                <span class="badge-dev">EM OBRA</span>
+                <div class="project-icon">💪</div>
+                <h3>Fitness Digital</h3>
+                <p>Landing page focada em hipertrofia em casa, com checkout funcional.</p>
+                <a href="fitness-digital.html" class="btn-ver">Ver Progresso</a>
+            </article>
+
+            <article class="project-card">
+                <span class="badge-dev">EM OBRA</span>
+                <div class="project-icon">⚙️</div>
+                <h3>Network Lab</h3>
+                <p>Documentação de topologias de rede e monitoramento de tráfego corporativo.</p>
+                <a href="network-lab.html" class="btn-ver">Ver Terminal</a>
+            </article>
+        </main>
+
+        <footer>
+            <p id="dev-signature"></p>
+        </footer>
+    </div>
+
+    <script>
+        // Assinatura Dinâmica Protegida
+        (function(){
+            const _txt = [68,101,115,101,110,118,111,108,118,101,100,111,114,32,65,108,101,115,115,97,110,100,114,111,32,67,97,109,112,101,108,111];
+            const _out = _txt.map(c => String.fromCharCode(c)).join('');
+            document.getElementById("dev-signature").innerHTML = `&copy; 2026 | ${_out}`;
+        })();
+    </script>
+</body>
+</html>

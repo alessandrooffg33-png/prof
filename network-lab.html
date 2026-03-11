@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Lab | Alessandro Campelo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --primary: #00d4ff; --bg: #0d1117; }
+        body { background: var(--bg); color: white; font-family: 'Consolas', monospace; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .terminal { background: #161b22; border: 1px solid #30363d; padding: 30px; border-radius: 10px; width: 90%; max-width: 600px; box-shadow: 0 0 30px rgba(0, 212, 255, 0.1); }
+        .top-bar { display: flex; gap: 8px; margin-bottom: 20px; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .red { background: #ff5f56; } .yellow { background: #ffbd2e; } .green { background: #27c93f; }
+        .text { color: var(--primary); font-size: 1.1rem; border-right: 2px solid var(--primary); width: fit-content; white-space: nowrap; overflow: hidden; animation: typing 3s steps(30), blink 0.5s step-end infinite; }
+        .status { margin-top: 20px; color: #8b949e; }
+        .back-link { display: block; margin-top: 40px; color: #27c93f; text-decoration: none; }
+        @keyframes typing { from { width: 0 } to { width: 100% } }
+        @keyframes blink { from, to { border-color: transparent } 50% { border-color: var(--primary) } }
+    </style>
+</head>
+<body>
+    <div class="terminal">
+        <div class="top-bar"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div></div>
+        <div class="text">root@alessandro-campelo:~/network-lab$</div>
+        <p style="margin-top: 15px;">> Configurando topologias de rede corporativa...</p>
+        <p>> Implementando monitoramento ICMP/SNMP...</p>
+        <p class="status">[STATUS: EM CONSTRUÇÃO - 40%]</p>
+        <a href="portfolio.html" class="back-link">cd .. /voltar_ao_portfolio</a>
+    </div>
+</body>
+</html>

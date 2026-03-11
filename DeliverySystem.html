@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pizzaria Ale | Delivery System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ==========================================================================
+           1. CONFIGURAÇÕES GERAIS E VARIÁVEIS
+           ========================================================================== */
+        :root {
+            --primary: #ff4500;
+            --bg-main: #020617;
+            --bg-header: #0f172a;
+            --bg-card: #111827;
+            --text-main: #f8fafc;
+            --cart-width: 380px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Poppins', sans-serif; background: var(--bg-main); color: var(--text-main); display: flex; overflow-x: hidden; }
+
+        /* ==========================================================================
+           2. EFEITO PUSH E ESTRUTURA
+           ========================================================================== */
+        .main-wrapper { flex: 1; width: 100%; transition: margin-right 0.4s ease; }
+        body.cart-active .main-wrapper { margin-right: var(--cart-width); }
+        .container { max-width: 1000px; margin: auto; padding: 20px; }
+
+        .main-header { background: var(--bg-header); padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); position: sticky; top: 0; z-index: 100; }
+        .header-container { display: flex; justify-content: space-between; align-items: center; max-width: 1000px; margin: auto; }
+        .logo-box { background: var(--primary); padding: 5px 10px; border-radius: 5px; font-weight: bold; margin-right: 10px; color: white; }
+        .logo-area { display: flex; align-items: center; }
+        .logo-area span { color: var(--primary); }
+
+        .cart-toggle {
+            background: rgba(255, 69, 0, 0.1);
+            border: 1px solid var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        .cart-toggle:hover { background: var(--primary); }
+        .cart-count { background: white; color: var(--primary); padding: 2px 8px; border-radius: 10px; margin-left: 5px; }
+
+        /* ==========================================================================
+           3. CARDS E IMAGENS
+           ========================================================================== */
+        .pizza-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 40px; }
+        .pizza-card { background: var(--bg-card); border-radius: 20px; padding: 20px; border: 1px solid rgba(255,255,255,0.05); transition: transform 0.2s; }
+        .pizza-card:hover { transform: translateY(-5px); }
+
+        .pizza-img-container {
+            width: 100%;
+            aspect-ratio: 16 / 10;
+            overflow: hidden;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            background: #1e293b;
+        }
+
+        .pizza-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.3s ease;
+        }
+
+        .drink-bg { background: #b91c1c; display: flex; align-items: center; justify-content: center; }
+        .drink-icon { font-size: 4rem; }
+
+        /* ==========================================================================
+           4. BOTÕES E INPUTS
+           ========================================================================== */
+        .options-group label { display: block; margin-bottom: 5px; font-size: 0.9rem; color: #94a3b8; }
+        .select-style { width: 100%; padding: 12px; background: #1f2937; color: white; border: 1px solid #374151; border-radius: 8px; margin: 10px 0; font-family: inherit; }
+        .price-preview { display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 15px; align-items: center; }
+        .price-val { color: var(--primary); font-size: 1.2rem; }
+        .btn-add { width: 100%; background: var(--primary); color: white; border: none; padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn-add:active { transform: scale(0.98); }
+
+        /* ==========================================================================
+           5. CARRINHO LATERAL
+           ========================================================================== */
+        .cart-sidebar {
+            position: fixed; top: 0; right: calc(var(--cart-width) * -1);
+            width: var(--cart-width); height: 100vh; background: var(--bg-header);
+            transition: right 0.4s ease; z-index: 1000; padding: 25px; display: flex; flex-direction: column;
+            border-left: 1px solid rgba(255,69,0,0.3);
+        }
+        .cart-sidebar.open { right: 0; }
+        .cart-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
+        .btn-close-cart { background: none; border: 1px solid var(--primary); color: var(--primary); padding: 5px 12px; border-radius: 5px; cursor: pointer; }
+        
+        .cart-items { flex: 1; overflow-y: auto; margin: 20px 0; }
+        .cart-item-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .item-info { display: flex; flex-direction: column; }
+        .item-name { font-weight: 600; font-size: 0.95rem; }
+        .item-price { color: #94a3b8; font-size: 0.85rem; }
+        .btn-remove-item { background: none; border: none; color: #ff5f56; cursor: pointer; font-size: 1.1rem; }
+
+        .cart-footer { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
+        .total-area { display: flex; justify-content: space-between; font-size: 1.4rem; font-weight: bold; margin-bottom: 20px; }
+        .total-price-val { color: #4caf50; }
+        .btn-checkout { background: #25d366; color: white; border: none; padding: 18px; border-radius: 12px; font-weight: bold; width: 100%; cursor: pointer; font-size: 1rem; }
+
+        @media (max-width: 768px) { 
+            body.cart-active .main-wrapper { margin-right: 0; } 
+            .cart-sidebar { width: 100%; right: -100%; } 
+        }
+    </style>
+</head>
+<body>
+
+    <div id="main-wrapper" class="main-wrapper">
+        <header class="main-header">
+            <div class="header-container">
+                <div class="logo-area">
+                    <div class="logo-box">PA</div>
+                    <h1>Pizzaria <span>Ale</span></h1>
+                </div>
+                <button class="cart-toggle" id="open-cart">
+                    🛒 Meu Pedido <span class="cart-count" id="cart-count">0</span>
+                </button>
+            </div>
+        </header>
+
+        <main class="container">
+            <div class="pizza-grid">
+                
+                <article class="pizza-card">
+                    <div class="pizza-img-container">
+                        <img id="pizza-img" src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500" alt="Pizza">
+                    </div>
+                    <div class="pizza-info">
+                        <h3>Nossas Pizzas</h3>
+                        <div class="options-group">
+                            <label>Sabor e Tamanho:</label>
+                            <select id="size-pep" class="select-style" onchange="atualizarPrecoCard('size-pep', 'price-pep'); trocarImagem();">
+                                <option value="54.90">Pizza Giga Calabresa - R$ 54,90</option>
+                                <option value="44.90">Pizza M Calabresa - R$ 44,90</option>
+                                <option value="34.90">Pizza P Calabresa - R$ 34,90</option>
+                                <option value="69.90">Pizza Giga Muçarela - R$ 69,90</option>
+                                <option value="59.90">Pizza M Muçarela - R$ 59,90</option>
+                                <option value="49.90">Pizza P Muçarela - R$ 49,90</option>
+                                <option value="69.90">Pizza Giga Portuguesa - R$ 69,90</option>
+                                <option value="59.90">Pizza M Portuguesa - R$ 59,90</option>
+                                <option value="49.90">Pizza P Portuguesa - R$ 49,90</option>
+                                <option value="69.90">Pizza Giga Quatro Queijos - R$ 69,90</option>
+                                <option value="59.90">Pizza M Quatro Queijos - R$ 59,90</option>
+                                <option value="49.90">Pizza P Quatro Queijos - R$ 49,90</option>
+                            </select>
+                        </div>
+                        <div class="price-preview">
+                            <span>Preço:</span>
+                            <span id="price-pep" class="price-val">R$ 54,90</span>
+                        </div>
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Pizza', 'size-pep')">Adicionar ao Pedido</button>
+                    </div>
+                </article>
+
+                <article class="pizza-card">
+                    <div class="pizza-img-container drink-bg">
+                        <span class="drink-icon">🥤</span>
+                    </div>
+                    <div class="pizza-info">
+                        <h3>Bebidas</h3>
+                        <div class="options-group">
+                            <label>Selecione:</label>
+                            <select id="select-refri" class="select-style" onchange="atualizarPrecoCard('select-refri', 'price-refri')">
+                                <option value="14.00">Coca-Cola 2 Litros - R$ 14,00</option>
+                                <option value="10.00">Coca-Cola 1 Litro - R$ 10,00</option>
+                                <option value="12.00">Guaraná 2 Litros - R$ 12,00</option>
+                                <option value="5.00">Lata 350ml - R$ 5,00</option>
+                            </select>
+                        </div>
+                        <div class="price-preview">
+                            <span>Preço:</span>
+                            <span id="price-refri" class="price-val">R$ 14,00</span>
+                        </div>
+                        <button class="btn-add" onclick="adicionarAoCarrinho('Bebida', 'select-refri')">Adicionar ao Pedido</button>
+                    </div>
+                </article>
+
+            </div>
+        </main>
+    </div>
+
+    <aside id="cart-sidebar" class="cart-sidebar">
+        <div class="cart-header">
+            <h2>Seu Pedido</h2>
+            <button id="close-cart" class="btn-close-cart">✕</button>
+        </div>
+        <div id="cart-items-list" class="cart-items">
+            <p style="text-align:center;color:#94a3b8;margin-top:20px;">Seu carrinho está vazio</p>
+        </div>
+        <div class="cart-footer">
+            <div class="total-area">
+                <span>Total:</span>
+                <span id="total-price" class="total-price-val">R$ 0,00</span>
+            </div>
+            <button class="btn-checkout" onclick="finalizarPedido()">Finalizar no WhatsApp</button>
+        </div>
+    </aside>
+
+    <script>
+        let carrinho = [];
+        let total = 0;
+
+        const imagensPizza = {
+            "Calabresa": "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500",
+            "Muçarela": "https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?w=500",
+            "Portuguesa": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=500",
+            "Quatro Queijos": "https://images.unsplash.com/photo-1541745537411-b8046dc6d66c?w=500"
+        };
+
+        const sidebar = document.getElementById('cart-sidebar');
+        const body = document.body;
+
+        // Abrir e Fechar Carrinho
+        document.getElementById('open-cart').onclick = () => { sidebar.classList.add('open'); body.classList.add('cart-active'); };
+        document.getElementById('close-cart').onclick = () => { sidebar.classList.remove('open'); body.classList.remove('cart-active'); };
+
+        // Trocar imagem conforme o sabor selecionado
+        function trocarImagem() {
+            const select = document.getElementById('size-pep');
+            const imgElement = document.getElementById('pizza-img');
+            const texto = select.options[select.selectedIndex].text;
+            
+            let saborKey = "Calabresa";
+            for (let s in imagensPizza) { 
+                if (texto.includes(s)) { saborKey = s; break; } 
+            }
+            
+            imgElement.style.opacity = "0.2";
+            setTimeout(() => {
+                imgElement.src = imagensPizza[saborKey];
+                imgElement.style.opacity = "1";
+            }, 150);
+        }
+
+        // Atualizar preço dinâmico no card
+        function atualizarPrecoCard(idSelect, idPrecoSpan) {
+            const val = document.getElementById(idSelect).value;
+            document.getElementById(idPrecoSpan).innerText = `R$ ${parseFloat(val).toFixed(2).replace('.', ',')}`;
+        }
+
+        // Adicionar item ao array do carrinho
+        function adicionarAoCarrinho(tipo, idSelect) {
+            const select = document.getElementById(idSelect);
+            const nomeCompleto = select.options[select.selectedIndex].text;
+            const nome = nomeCompleto.split(' - ')[0]; // Pega apenas o nome antes do preço
+            const preco = parseFloat(select.value);
+
+            carrinho.push({ id: Date.now(), nome, preco });
+            total += preco;
+            atualizarInterface();
+            
+            // Abrir carrinho ao adicionar
+            sidebar.classList.add('open');
+            body.classList.add('cart-active');
+        }
+
+        // Remover item do array
+        function removerItem(id) {
+            const idx = carrinho.findIndex(i => i.id === id);
+            if (idx > -1) { 
+                total -= carrinho[idx].preco; 
+                carrinho.splice(idx, 1); 
+            }
+            atualizarInterface();
+        }
+
+        // Renderizar o carrinho na tela
+        function atualizarInterface() {
+            const lista = document.getElementById('cart-items-list');
+            document.getElementById('cart-count').innerText = carrinho.length;
+            document.getElementById('total-price').innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
+            
+            if (carrinho.length === 0) {
+                lista.innerHTML = '<p style="text-align:center;color:#94a3b8;margin-top:20px;">Seu carrinho está vazio</p>';
+                return;
+            }
+
+            lista.innerHTML = carrinho.map(item => `
+                <div class="cart-item-row">
+                    <div class="item-info">
+                        <span class="item-name">${item.nome}</span>
+                        <span class="item-price">R$ ${item.preco.toFixed(2).replace('.', ',')}</span>
+                    </div>
+                    <button class="btn-remove-item" onclick="removerItem(${item.id})">✕</button>
+                </div>
+            `).join('');
+        }
+
+        // Gerar link para o WhatsApp
+        function finalizarPedido() {
+            if (carrinho.length === 0) return alert("Adicione itens primeiro!");
+            
+            let msg = `*NOVO PEDIDO - PIZZARIA ALE*%0A%0A`;
+            carrinho.forEach(i => {
+                msg += `• ${i.nome} (R$ ${i.preco.toFixed(2).replace('.', ',')})%0A`;
+            });
+            msg += `%0A*TOTAL: R$ ${total.toFixed(2).replace('.', ',')}*%0A%0A_Favor confirmar o endereço de entrega._`;
+            
+            const numeroTelefone = "5511999999999"; // Substitua pelo seu número
+            window.open(`https://wa.me/${numeroTelefone}?text=${msg}`);
+        }
+    </script>
+</body>
+</html>
